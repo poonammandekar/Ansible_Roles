@@ -1,0 +1,26 @@
+---
+- name: Install Tomcat and required packages
+  yum:
+    name:
+      - tomcat
+      - tomcat-webapps
+      - tomcat-admin-webapps
+      - java-11-amazon-corretto.x86_64
+      - wget
+    state: present
+
+- name: Start and enable Tomcat service
+  systemd:
+    name: tomcat
+    enabled: yes
+    state: started
+
+- name: Download sample.war using wget
+  get_url:
+    url: "{{ war_url }}"
+    dest: "{{ war_dest }}"
+    owner: velocity
+    group: velocity
+    mode: '0644'
+  notify: Restart Tomcat
+

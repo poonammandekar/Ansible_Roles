@@ -1,0 +1,43 @@
+---
+- name: Copy Dockerfile and context directory to remote host
+  copy:
+    src: dirvel/
+    dest: /home/velocity/dirvel/
+    owner: velocity
+    group: velocity
+    mode: '0755'
+
+- name: Install and start Docker
+  shell: |
+    set -e
+    yum install -y docker
+    systemctl enable docker
+    systemctl start docker
+  register: docker_setup
+
+- name: Debug Docker install output
+  debug:
+    var: docker_setup.stdout_lines
+
+- name: Build Docker image on EC2
+  shell: |
+    set -e
+    cd {{ dockerfile_path }}
+    docker build -t {{ image_name }} .
+  register: build_result
+
+- name: Debug image build result
+  debug:
+    var: build_result.stdout_lines
+
+- name: Run Docker container
+  shell: |
+    set -e
+    docker rm -f {{ container_name }} || true
+    docker run -d --name {{ container_name }} -p {{ host_port }}:{{ container_port }} {{ image_name }}
+  register: container_run
+
+- name: Debug container run result
+  debug:
+    var: container_run.stdout_lines
+

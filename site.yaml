@@ -1,0 +1,10 @@
+---
+- name: Install Tomcat and deploy WAR file
+  hosts: uatlinux
+  become: yes
+  gather_facts: yes
+  remote_user: velocity
+
+  roles:
+    - tomcat_deploy
+

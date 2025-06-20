@@ -1,0 +1,10 @@
+---
+- name: Build Docker image on Amazon Linux 2
+  hosts: devlinux
+  become: yes
+  gather_facts: yes
+  remote_user: velocity
+
+  roles:
+    - docker_build_run
+

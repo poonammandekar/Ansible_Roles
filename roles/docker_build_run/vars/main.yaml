@@ -1,0 +1,7 @@
+---
+image_name: tomcat-sample
+container_name: tomcat-container
+dockerfile_path: /home/velocity/dirvel
+container_port: 8080
+host_port: 8181
+
